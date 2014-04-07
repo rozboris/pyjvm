@@ -17,22 +17,23 @@
 For systems without java installed.
 '''
 
-import urllib2
+import sys
+from urllib.request import urlopen
 
 # Dropbox content, this is rt.jar from JDK7
 url = 'https://dl.dropboxusercontent.com/s/9wiumk3xvigqndi/rt.jar'
 
-print "rt.jar from Java 7 is being downloaded"
+print("rt.jar from Java 7 is being downloaded")
 
-u = urllib2.urlopen(url)
+u = urlopen(url)
 f = open('rt.jar', 'wb')
 meta_info = u.info()
-file_size = int(meta_info.getheaders("Content-Length")[0])
-print "Total: %s mb" % (file_size/1024/1024)
+file_size = int(meta_info.get("Content-Length"))
+print("Total: %s mb" % (file_size/1024/1024))
 
 downloaded = 0
 block = 8192
-print " [" + ("="*50) + "]"
+print("[" + ("="*50) + "]")
 while True:
     data = u.read(block)
     if not data:
@@ -44,6 +45,7 @@ while True:
     arrow = "=" * int(completed/2.0)
     status = r"[%s] %3.0f%%" % (arrow, completed)
     status = status + chr(8)*(len(status)+1)
-    print status,
+    print(status, end = '')
+    sys.stdout.flush()
 
 f.close()
